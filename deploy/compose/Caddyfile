@@ -1,0 +1,29 @@
+{
+	email {$ACME_EMAIL}
+}
+
+{$PUSHBEAM_DOMAIN} {
+	encode gzip
+	header Strict-Transport-Security "max-age=31536000"
+
+	request_body {
+		max_size 64KB
+	}
+
+	@pushbeam path /api/v1/* /health/*
+	handle @pushbeam {
+		reverse_proxy server:8080
+	}
+
+	handle {
+		respond 404
+	}
+
+	log {
+		format json
+		# Never log the Authorization header.
+		format filter {
+			request>headers>Authorization delete
+		}
+	}
+}

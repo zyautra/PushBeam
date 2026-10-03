@@ -1,0 +1,30 @@
+# OS / IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.iml
+
+# Secrets
+.env
+!.env.example
+
+# Gradle / Android
+.gradle/
+build/
+local.properties
+.kotlin/
+.cxx/
+
+# Release signing
+keystore.properties
+*.jks
+*.keystore
+
+# Deployment and Firebase app settings differ per user
+android/google-services.json
+deploy/compose/.env
+deploy/kubernetes/overlays/*-local/
+
+# IDE output
+bin/

@@ -1,0 +1,93 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pushbeam-server
+  labels:
+    app.kubernetes.io/name: pushbeam-server
+    app.kubernetes.io/part-of: pushbeam
+spec:
+  # SQLite 파일 하나를 쓰므로 항상 한 개만 실행한다 (docs/01 5.7).
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: pushbeam-server
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: pushbeam-server
+        app.kubernetes.io/part-of: pushbeam
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+      terminationGracePeriodSeconds: 30
+      containers:
+        - name: server
+          image: pushbeam-server:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          env:
+            - name: PUSHBEAM_DATA_DIR
+              value: /data
+            - name: PUSHBEAM_FIREBASE_CREDENTIALS
+              value: /run/secrets/pushbeam/firebase-service-account.json
+            - name: PUSHBEAM_OPERATOR_TOKEN_FILE
+              value: /run/secrets/pushbeam/operator-token
+            - name: PUSHBEAM_FIREBASE_PROJECT_NUMBER
+              valueFrom:
+                configMapKeyRef:
+                  name: pushbeam-config
+                  key: firebase-project-number
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: "1"
+              memory: 512Mi
+          startupProbe:
+            httpGet:
+              path: /health/ready
+              port: http
+            failureThreshold: 30
+            periodSeconds: 2
+          readinessProbe:
+            httpGet:
+              path: /health/ready
+              port: http
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health/live
+              port: http
+            periodSeconds: 20
+          volumeMounts:
+            - name: data
+              mountPath: /data
+            - name: secrets
+              mountPath: /run/secrets/pushbeam
+              readOnly: true
+            - name: temporary-files
+              mountPath: /tmp
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: pushbeam-data
+        # 키: firebase-service-account.json, operator-token. 저장소에 넣지 않고 kubectl로 만든다.
+        - name: secrets
+          secret:
+            secretName: pushbeam-secrets
+            defaultMode: 0440
+        - name: temporary-files
+          emptyDir: {}
