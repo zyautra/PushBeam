@@ -32,7 +32,7 @@ jobs:
           distribution: temurin
           java-version: "21"
 
-      - uses: gradle/actions/setup-gradle@v5
+      - uses: gradle/actions/setup-gradle@v6
 
       # 실제 Firebase 설정이 없으면 예시 파일로 컴파일만 확인한다.
       - name: Firebase config
