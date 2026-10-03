@@ -104,7 +104,7 @@ pushbeam-admin senders create nas-monitor --channels server-alerts
 ## 릴리즈
 
 버전은 [`gradle.properties`](gradle.properties)의 `pushbeam.version` 하나로 관리한다.
-`pushbeam-v<버전>` 태그를 push하면 GitHub Actions가 앱을 빌드·서명해 App Distribution 테스터 그룹에 배포한다.
+`v<버전>` 태그를 push하면 GitHub Actions가 앱을 빌드·서명해 App Distribution 테스터 그룹에 배포한다.
 변경 내역은 [CHANGELOG](CHANGELOG.md)에 남긴다.
 
 ## 기여

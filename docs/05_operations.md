@@ -17,7 +17,7 @@
 6. deploy/.env에 도메인 등을 쓰고 docker compose up -d
 7. pushbeam-admin status로 서버가 준비됐는지 확인한다.
 8. pushbeam-admin members allow <내 이메일>
-9. 첫 pushbeam-v* 태그로 앱을 배포하고, 설치해서 로그인한다.
+9. 첫 v* 태그로 앱을 배포하고, 설치해서 로그인한다.
 10. 채널과 Sender를 만든다.
 ```
 
@@ -122,7 +122,7 @@ API는 같은 버전 안에서 하위 호환이므로 서버를 먼저 올리고
 ### 7.2 앱
 
 ```text
-git tag pushbeam-v<버전> && git push origin pushbeam-v<버전>
+git tag v<버전> && git push origin v<버전>
 ```
 
 GitHub Actions가 빌드·서명하고 `pushbeam-members` 그룹에 배포한다. 개발 중에는 0.x 버전을 쓴다.

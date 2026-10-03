@@ -6,7 +6,7 @@ name: Android → App Distribution
 #              ANDROID_KEYSTORE_BASE64, ANDROID_KEYSTORE_PASSWORD, ANDROID_KEY_ALIAS, ANDROID_KEY_PASSWORD
 on:
   push:
-    tags: ["pushbeam-v*"]   # 예: git tag pushbeam-v0.2.0 && git push origin pushbeam-v0.2.0
+    tags: ["v*"]   # 예: git tag v0.2.0 && git push origin v0.2.0
   workflow_dispatch:
 
 jobs:
@@ -49,7 +49,7 @@ jobs:
         run: |
           # versionCode는 실행 번호 + 100 (수동 배포 번호와 겹치지 않게)
           export VERSION_CODE=$((GITHUB_RUN_NUMBER + 100))
-          if [[ "$GITHUB_REF" == refs/tags/pushbeam-v* ]]; then export VERSION_NAME="${GITHUB_REF_NAME#pushbeam-v}"
+          if [[ "$GITHUB_REF" == refs/tags/v* ]]; then export VERSION_NAME="${GITHUB_REF_NAME#v}"
           else export VERSION_NAME="dev-$GITHUB_RUN_NUMBER"; fi
           ./gradlew :android:assembleRelease
 

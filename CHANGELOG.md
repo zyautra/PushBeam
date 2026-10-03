@@ -14,7 +14,7 @@
 - **Android**: Google 로그인, 받은 알림 목록·상세·검색, 채널 구독·음소거·울릴 알림 설정, 방해 금지 시간, 진동·소리 설정, 중요도별 알림 채널
 - **pushbeam-admin**: Member, 채널, Sender, 발송, 기록, 배포 그룹 관리
 - **배포**: Docker 이미지, Docker Compose + Caddy, Kubernetes base
-- **CI**: 테스트·빌드, `pushbeam-v*` 태그로 App Distribution 배포
+- **CI**: 테스트·빌드, `v*` 태그로 App Distribution 배포
 
-[Unreleased]: https://github.com/zyautra/pushbeam/compare/pushbeam-v0.1.0...HEAD
-[0.1.0]: https://github.com/zyautra/pushbeam/releases/tag/pushbeam-v0.1.0
+[Unreleased]: https://github.com/zyautra/pushbeam/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/zyautra/pushbeam/releases/tag/v0.1.0
