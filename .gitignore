@@ -1,0 +1,27 @@
+# OS / IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.iml
+
+# Secrets
+.env
+!.env.example
+
+# Gradle / Android
+.gradle/
+build/
+local.properties
+.kotlin/
+.cxx/
+
+# Release signing
+keystore.properties
+*.jks
+*.keystore
+
+# 배포 설정과 Firebase 앱 설정은 사용자마다 다르다
+android/google-services.json
+deploy/compose/.env
+deploy/kubernetes/overlays/*-local/

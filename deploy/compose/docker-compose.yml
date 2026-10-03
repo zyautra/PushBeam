@@ -1,0 +1,44 @@
+# PushBeam 배포 (docs/04).
+# 설정은 .env에 둔다: cp .env.example .env
+#   cd deploy/compose && docker compose up -d --build
+name: pushbeam
+
+services:
+  server:
+    build:
+      context: ../..
+      dockerfile: server/Dockerfile
+    image: pushbeam-server:${PUSHBEAM_VERSION:-local}
+    restart: unless-stopped
+    read_only: true
+    tmpfs: [/tmp]
+    environment:
+      PUSHBEAM_FIREBASE_PROJECT_NUMBER: ${PUSHBEAM_FIREBASE_PROJECT_NUMBER:?set in .env}
+      PUSHBEAM_DISTRIBUTION_GROUP: ${PUSHBEAM_DISTRIBUTION_GROUP:-pushbeam-members}
+      PUSHBEAM_DEFAULT_TIME_ZONE: ${PUSHBEAM_DEFAULT_TIME_ZONE:-Asia/Seoul}
+      PUSHBEAM_FIREBASE_CREDENTIALS: /run/secrets/firebase-service-account.json
+      PUSHBEAM_OPERATOR_TOKEN_FILE: /run/secrets/operator-token
+    volumes:
+      - ${PUSHBEAM_HOME:?set in .env}/data:/data
+      - ${PUSHBEAM_HOME}/secrets:/run/secrets:ro
+    networks: [internal]
+    # 8080은 외부에 열지 않는다. Caddy만 접근한다.
+
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    depends_on: [server]
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      PUSHBEAM_DOMAIN: ${PUSHBEAM_DOMAIN:?set in .env}
+      ACME_EMAIL: ${ACME_EMAIL:-}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - ${PUSHBEAM_HOME}/caddy/data:/data
+      - ${PUSHBEAM_HOME}/caddy/config:/config
+    networks: [internal]
+
+networks:
+  internal: {}
